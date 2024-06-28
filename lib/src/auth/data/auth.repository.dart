@@ -1,5 +1,5 @@
-
 import 'package:dio/dio.dart';
+import 'package:noted_frontend/src/auth/data/dto/sign-in.dto.dart';
 import 'package:noted_frontend/src/shared/dio.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,11 +15,10 @@ class AuthRepository {
   AuthRepository({required this.client});
 
   Future<void> signIn(String email, String password) async {
-    throw DioException.badResponse(statusCode: 401, requestOptions: RequestOptions(), response: Response(
-      requestOptions: RequestOptions(),
-      data: "rip"));
-    // final signInDto = SignInDto(email: email, password: password);
-    // final response = await client.post('/api/auth/sign-in', data: signInDto.toJson());
+    final signInDto = SignInDto(email: email, password: password);
+    // final response =
+    //     await client.post('/api/v1/auth/sign-in', data: signInDto.toJson());
+    // print(response);
     // return UserSessionModel.fromJson(response.data);
     // return UserSessionModel(email: email, role: "User");
   }

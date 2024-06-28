@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +17,7 @@ Dio dio(DioRef ref) {
 }
 
 final _qaOptions = BaseOptions(
-  baseUrl: "http://localhost:9000",
+  baseUrl: dotenv.get("APP_URI"),
   contentType: "application/json",
   responseType: ResponseType.json,
   receiveTimeout: const Duration(seconds: 8),

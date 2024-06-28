@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:noted_frontend/src/auth/data/auth.repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +15,7 @@ class AuthService {
   AuthService({required this.repository});
 
   Future<void> signIn(String email, String password) async {
-    final sessionData = await repository.signIn(email, password);
+    await repository.signIn(email, password);
     // await session.begin(sessionData);
   }
 

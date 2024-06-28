@@ -23,4 +23,16 @@ class SignInViewModel extends _$SignInViewModel {
     }
     ref.read(routerProvider).go(DashboardView.route);
   }
+
+  Future<void> onSignInWithGooglePressed() {
+    throw UnimplementedError();
+  }
+
+  Future<void> onSignInWithGithubPressed() {
+    throw UnimplementedError();
+  }
+
+  void forgottenPassword() {}
+
+  void signUp() {}
 }
