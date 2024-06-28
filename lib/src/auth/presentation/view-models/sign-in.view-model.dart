@@ -1,4 +1,5 @@
 import 'package:noted_frontend/src/auth/application/auth.service.dart';
+import 'package:noted_frontend/src/auth/presentation/views/forgotten-password.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-up.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/dashboard.view.dart';
@@ -34,7 +35,9 @@ class SignInViewModel extends _$SignInViewModel {
     throw UnimplementedError();
   }
 
-  void forgottenPassword() {}
+  void forgottenPassword() {
+    ref.read(routerProvider).go(ForgottenPasswordView.route);
+  }
 
   void signUp() {
     ref.read(routerProvider).go(SignUpView.route);

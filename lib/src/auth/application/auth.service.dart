@@ -31,4 +31,8 @@ class AuthService {
       password: password,
     );
   }
+
+  sendRecoveryEmail(String email) {
+    throw UnimplementedError();
+  }
 }
