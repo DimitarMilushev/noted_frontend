@@ -23,4 +23,12 @@ class AuthService {
     await repository.signOut();
     // await session.end();
   }
+
+  Future<void> signUp(String email, String username, String password) async {
+    await repository.signUp(
+      email: email,
+      username: username,
+      password: password,
+    );
+  }
 }

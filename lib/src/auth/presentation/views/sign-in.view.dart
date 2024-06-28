@@ -40,10 +40,10 @@ class _SignInViewState extends ConsumerState<SignInView> {
           ),
           Center(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              constraints: BoxConstraints.loose(Size(368, 468)),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              constraints: BoxConstraints.loose(const Size(368, 468)),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
                 color: Colors.white,
                 boxShadow: kElevationToShadow[1],
               ),
@@ -91,11 +91,11 @@ class _UsernamePasswordForm extends StatelessWidget {
   final TextEditingController passwordController;
   final SignInViewModel viewModel;
 
-  const _UsernamePasswordForm(
-      {super.key,
-      required this.emailController,
-      required this.passwordController,
-      required this.viewModel});
+  const _UsernamePasswordForm({
+    required this.emailController,
+    required this.passwordController,
+    required this.viewModel,
+  });
 
   @override
   Widget build(BuildContext context) {

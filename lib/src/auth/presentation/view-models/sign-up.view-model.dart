@@ -1,23 +1,22 @@
 import 'package:noted_frontend/src/auth/application/auth.service.dart';
-import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
-import 'package:noted_frontend/src/auth/presentation/views/sign-up.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/dashboard.view.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'sign-in.view-model.g.dart';
+part 'sign-up.view-model.g.dart';
 
 @riverpod
-class SignInViewModel extends _$SignInViewModel {
+class SignUpViewModel extends _$SignUpViewModel {
   late final AuthService _service;
   @override
   FutureOr<void> build() {
     _service = ref.read(authServiceProvider);
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signUp(String email, String username, String password) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => _service.signIn(email, password));
+    state = await AsyncValue.guard(
+        () => _service.signUp(email, username, password));
     if (state.hasError) {
       print('Has Error!');
       print(state.error);
@@ -26,17 +25,11 @@ class SignInViewModel extends _$SignInViewModel {
     ref.read(routerProvider).go(DashboardView.route);
   }
 
-  Future<void> onSignInWithGooglePressed() {
+  Future<void> onSignUpWithGooglePressed() {
     throw UnimplementedError();
   }
 
-  Future<void> onSignInWithGithubPressed() {
+  Future<void> onSignUpWithGithubPressed() {
     throw UnimplementedError();
-  }
-
-  void forgottenPassword() {}
-
-  void signUp() {
-    ref.read(routerProvider).go(SignUpView.route);
   }
 }

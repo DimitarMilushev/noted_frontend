@@ -23,5 +23,13 @@ class AuthRepository {
     // return UserSessionModel(email: email, role: "User");
   }
 
+  Future<void> signUp({
+    required String email,
+    required String username,
+    required String password,
+  }) {
+    throw UnimplementedError();
+  }
+
   Future<void> signOut() => client.get('/api/auth/sign-out');
 }
