@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_size_text:
+    dependency: transitive
+    description:
+      name: auto_size_text
+      sha256: "3f5261cd3fb5f2a9ab4e2fc3fba84fd9fcaac8821f20a1d4e71f557521b22599"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -251,6 +259,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.1"
+  flutter_side_menu:
+    dependency: "direct main"
+    description:
+      name: flutter_side_menu
+      sha256: "60a20aab560d170c70084a6007aa8d2087649c7d2b75cc887c17f3ba4ea6372f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.3"
   flutter_social_button:
     dependency: "direct main"
     description:
@@ -700,4 +716,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.4.0 <4.0.0"
-  flutter: ">=3.18.0-18.0.pre.54"
+  flutter: ">=3.21.1"
