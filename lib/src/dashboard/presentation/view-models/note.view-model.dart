@@ -1,25 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:noted_frontend/src/dashboard/application/dashboard.service.dart';
+import 'package:noted_frontend/src/dashboard/presentation/view-models/note-view.data.dart';
 import 'package:noted_frontend/src/shared/components/note-preivew-card.component.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'dashboard.view-model.g.dart';
+part 'note.view-model.g.dart';
 
 @riverpod
-class DashboardViewModel extends _$DashboardViewModel {
+class NoteViewModel extends _$NoteViewModel {
   late final DashboardService _service;
 
+  NotePreviewCardData? get data => state.value?.data;
+  bool get isSaving => state.value?.isSaving ?? false;
+
   @override
-  FutureOr<List<NotePreviewCardData>> build() {
+  FutureOr<NoteViewData> build() {
     _service = ref.read(dashboardServiceProvider);
-    return [];
+    return NoteViewData();
   }
 
-  Future<void> fetchData() async {
-    state = AsyncLoading();
-    final response =
-        await Future.delayed(Durations.long1, () => _lastNotesMock);
-    state = AsyncData(response);
+  Future<void> saveChanges() async {
+    final stateData = state.valueOrNull;
+    if (stateData == null) return;
+
+    state = AsyncData(stateData.copyWith(isSaving: true));
+    await Future.delayed(Durations.long1, () {
+      state = AsyncData(stateData.copyWith(isSaving: false));
+    });
+  }
+
+  Future<void> loadData(num id) async {
+    state = const AsyncLoading();
+    final data = await Future.delayed(
+        Durations.long1, () => _lastNotesMock.where((x) => x.id == id).first);
+
+    state = AsyncData(NoteViewData(data: data));
   }
 }
 

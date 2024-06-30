@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
@@ -17,7 +15,6 @@ class DashboardView extends ConsumerStatefulWidget {
 class _DashboardViewState extends ConsumerState<DashboardView> {
   late final DashboardViewModel controller;
   final SideMenuController sideMenuController = SideMenuController();
-
   @override
   void initState() {
     controller = ref.read(dashboardViewModelProvider.notifier);

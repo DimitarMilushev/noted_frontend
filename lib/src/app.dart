@@ -55,16 +55,16 @@ class MyApp extends ConsumerWidget {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
-          theme: ThemeData(),
+          theme: ThemeData(useMaterial3: true),
           darkTheme: ThemeData.dark(),
-          themeMode: settingsController.themeMode,
 
           routerConfig: ref.watch(routerProvider),
           builder: (context, child) => Scaffold(
-            body: child,),
+            body: child,
+          ),
         );
-          // Define a function to handle named routes in order to support
-          // Flutter web url navigation and deep linking.
+        // Define a function to handle named routes in order to support
+        // Flutter web url navigation and deep linking.
         //   onGenerateRoute: (RouteSettings routeSettings) {
         //     return MaterialPageRoute<void>(
         //       settings: routeSettings,

@@ -1,5 +1,5 @@
 import 'package:noted_frontend/src/auth/application/auth.service.dart';
-import 'package:noted_frontend/src/dashboard/presentation/dashboard.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -2,7 +2,8 @@ import 'package:go_router/go_router.dart';
 import 'package:noted_frontend/src/auth/presentation/views/forgotten-password.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-up.view.dart';
-import 'package:noted_frontend/src/dashboard/presentation/dashboard.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/note.view.dart';
 import 'package:noted_frontend/src/shared/views/home.view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,9 +31,16 @@ GoRouter router(RouterRef ref) {
   ];
   final loggedInRoutes = [
     GoRoute(
-      path: DashboardView.route,
-      builder: (context, state) => const DashboardView(),
-    )
+        path: DashboardView.route,
+        builder: (context, state) => const DashboardView(),
+        routes: [
+          GoRoute(
+              path: NoteView.route.substring(1),
+              builder: (context, state) {
+                final num id = num.parse(state.pathParameters['noteId']!);
+                return NoteView(id);
+              })
+        ]),
   ];
   final routes = [...loggedOutRoutes, ...loggedInRoutes];
 

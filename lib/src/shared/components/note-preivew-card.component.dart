@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/note.view.dart';
+import 'package:noted_frontend/src/shared/router.provider.dart';
 
 class NotePreviewCard extends ConsumerWidget {
   final NotePreviewCardData data;
@@ -8,7 +10,9 @@ class NotePreviewCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ref.read(routerProvider).go(NoteView.getRouteForId(data.id));
+      },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(24)),
