@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note-view.data.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note.view-model.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
-import 'package:noted_frontend/src/shared/components/note-preivew-card.component.dart';
 
 class NoteView extends ConsumerStatefulWidget {
   static const String route = '/note/:noteId';
@@ -37,37 +35,32 @@ class _NoteViewState extends ConsumerState<NoteView> {
   Widget build(BuildContext context) {
     final viewState = ref.watch(noteViewModelProvider);
     return SafeArea(
-      child: Row(children: [
-        _SideMenu(),
-        Expanded(
-            child: Stack(
-          children: [
-            SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.black12),
-              ),
+        child: Stack(
+      children: [
+        const SizedBox.expand(
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: Colors.black12),
+          ),
+        ),
+        Center(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border.symmetric(
+                  vertical: BorderSide(
+                      style: BorderStyle.solid,
+                      color: Color.fromARGB(71, 0, 0, 0))),
             ),
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.symmetric(
-                      vertical: BorderSide(
-                          style: BorderStyle.solid,
-                          color: const Color.fromARGB(71, 0, 0, 0))),
-                ),
-                constraints: BoxConstraints(maxWidth: 1024),
-                child: viewState.when(
-                    data: (data) => _onData(data),
-                    error: (_, __) => Container(),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator())),
-              ),
-            ),
-          ],
-        )),
-      ]),
-    );
+            constraints: BoxConstraints(maxWidth: 1024),
+            child: viewState.when(
+                data: (data) => _onData(data),
+                error: (_, __) => Container(),
+                loading: () =>
+                    const Center(child: CircularProgressIndicator())),
+          ),
+        ),
+      ],
+    ));
   }
 
   Widget _onData(NoteViewData data) => Column(
@@ -85,7 +78,7 @@ class _NoteViewState extends ConsumerState<NoteView> {
                 ),
                 style: Theme.of(context).textTheme.headlineLarge),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           HtmlEditor(
             controller: bodyController, //required
             htmlEditorOptions: HtmlEditorOptions(
@@ -121,47 +114,6 @@ class _NoteToolbar extends StatelessWidget {
                   size: 32,
                 ),
               ),
-      ),
-    );
-  }
-}
-
-class _SideMenu extends ConsumerWidget {
-  const _SideMenu({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SideMenu(
-      mode: SideMenuMode.compact,
-      hasResizer: false,
-      hasResizerToggle: true,
-      resizerToggleData: const ResizerToggleData(
-        opacity: 0.7,
-        iconSize: 32,
-      ),
-      backgroundColor: Theme.of(context).splashColor,
-      builder: (data) => SideMenuData(
-        header: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(
-            vertical: 24,
-            horizontal: 8,
-          ),
-          child: Text("Noted v1.0"),
-        ),
-        items: [
-          SideMenuItemDataTile(
-            isSelected: true,
-            onTap: () {},
-            title: 'Dashboard',
-            icon: const Icon(Icons.home),
-          ),
-          SideMenuItemDataTile(
-            isSelected: false,
-            onTap: () {},
-            title: 'Settings',
-            icon: const Icon(Icons.settings),
-          ),
-        ],
       ),
     );
   }
