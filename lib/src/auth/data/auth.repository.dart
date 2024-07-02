@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:noted_frontend/src/auth/data/dto/sign-in.dto.dart';
+import 'package:noted_frontend/src/auth/data/dto/sign-in.response.dart';
 import 'package:noted_frontend/src/shared/dio.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,16 +12,14 @@ AuthRepository authRepository(AuthRepositoryRef ref) => AuthRepository(
     );
 
 class AuthRepository {
-  final Dio client;
-  AuthRepository({required this.client});
+  final Dio _client;
+  AuthRepository({required Dio client}) : _client = client;
 
-  Future<void> signIn(String email, String password) async {
+  Future<SignInResponse> signIn(String email, String password) async {
     final signInDto = SignInDto(email: email, password: password);
-    // final response =
-    //     await client.post('/api/v1/auth/sign-in', data: signInDto.toJson());
-    // print(response);
-    // return UserSessionModel.fromJson(response.data);
-    // return UserSessionModel(email: email, role: "User");
+    final response =
+        await _client.post('/api/v1/auth/sign-in', data: signInDto.toJson());
+    return SignInResponse.fromJson(response.data);
   }
 
   Future<void> signUp({
@@ -31,5 +30,7 @@ class AuthRepository {
     throw UnimplementedError();
   }
 
-  Future<void> signOut() => client.get('/api/auth/sign-out');
+  Future<void> signOut() async {
+    await _client.get('/api/v1/auth/sign-out');
+  }
 }

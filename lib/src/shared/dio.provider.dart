@@ -1,18 +1,24 @@
-import 'package:dio/dio.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:dio/browser.dart';
+import 'package:dio/dio.dart';
 
 part 'dio.provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Dio dio(DioRef ref) {
-  final instance = Dio(_qaOptions)
-    ..interceptors.addAll([
-      // HttpInterceptor(ref),
-    ]);
+  late final Dio instance;
+  if (kIsWeb) {
+    instance = DioForBrowser(_qaOptions)
+      ..options.extra['withCredentials'] = true;
+  } else {
+    instance = Dio(_qaOptions)..interceptors.add(CookieManager(CookieJar()));
+  }
 
-  // instance.interceptors.add(ref.read(cookieManagerProvider));
   return instance;
 }
 

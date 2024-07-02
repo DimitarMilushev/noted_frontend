@@ -1,3 +1,4 @@
+import 'package:noted_frontend/src/auth/data/models/user-role.enum.dart';
 import 'package:noted_frontend/src/shared/providers/auth/session.data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,19 +6,24 @@ part 'session.provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Session extends _$Session {
-  FutureOr<SessionData> build() {
+  @override
+  FutureOr<SessionData?> build() {
     //TODO: Check store
-    return SessionData();
+    return null;
   }
 
-  bool get isLoggedIn => state.value?.session != null;
+  bool get isLoggedIn => true;
 
-  void startSession(String session, String username, String email) {
-    state = AsyncData(
-        SessionData(email: email, username: username, session: session));
+  void startSession(String email, String username, UserRole role) {
+    final session = SessionData(
+      username: username,
+      email: email,
+      role: role,
+    );
+    state = AsyncData(session);
   }
 
-  void endSession(String session, String username, String email) {
-    state = AsyncData(SessionData());
+  void endSession() {
+    state = const AsyncData(null);
   }
 }

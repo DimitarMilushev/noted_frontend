@@ -20,6 +20,7 @@ class DashboardViewModel extends _$DashboardViewModel {
     final response =
         await Future.delayed(Durations.long1, () => _lastNotesMock);
     state = AsyncData(response);
+    print(await _service.getDashboardData());
   }
 }
 

@@ -2,7 +2,6 @@ import 'package:noted_frontend/src/auth/application/auth.service.dart';
 import 'package:noted_frontend/src/auth/presentation/views/forgotten-password.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-up.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
-import 'package:noted_frontend/src/shared/providers/auth/session.provider.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,8 +23,6 @@ class SignInViewModel extends _$SignInViewModel {
       print(state.error);
       return;
     }
-
-    ref.read(sessionProvider.notifier).startSession("session", "gosho", email);
 
     ref.read(routerProvider).go(DashboardView.route);
   }

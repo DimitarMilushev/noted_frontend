@@ -27,6 +27,8 @@ dependencies:
   flutter_social_button: ^1.1.4+1
   flutter_side_menu: ^0.5.3
   html_editor_enhanced: ^2.5.1
+  dio_cookie_manager: ^3.1.1
+  cookie_jar: ^4.0.8
 
 dev_dependencies:
   flutter_test:

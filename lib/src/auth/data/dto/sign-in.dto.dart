@@ -8,5 +8,6 @@ class SignInDto with _$SignInDto {
   const factory SignInDto({required String email, required String password}) =
       _SignInDto;
 
-  factory SignInDto.fromJson(Map<String, dynamic> json) => _$SignInDtoFromJson(json);
+  factory SignInDto.fromJson(Map<String, dynamic> json) =>
+      _$SignInDtoFromJson(json);
 }
