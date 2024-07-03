@@ -1,20 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:noted_frontend/src/dashboard/presentation/models/notebook.model.dart';
 
 part 'dashboard-view.data.freezed.dart';
 
 @freezed
 class DashboardViewData with _$DashboardViewData {
   factory DashboardViewData({
-    List<Notebook>? notebooks,
-    @Default(null) num? selectedNotebook,
+    @Default([]) List<Notebook> notebooks,
+    @Default(-1) num selectedNotebook,
+    @Default(-1) num selectedNote,
   }) = _DashboardViewData;
-}
-
-@freezed
-class Notebook with _$Notebook {
-  factory Notebook({
-    required num id,
-    required String title,
-    required DateTime lastUpdated,
-  }) = _Notebook;
 }

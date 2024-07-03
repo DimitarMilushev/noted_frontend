@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noted_frontend/src/auth/presentation/views/forgotten-password.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
 import 'package:noted_frontend/src/auth/presentation/views/sign-up.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/deleted.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/note.view.dart';
-import 'package:noted_frontend/src/settings/settings_controller.dart';
-import 'package:noted_frontend/src/settings/settings_view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/notebook.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/side-menu-nav.view.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/starred.view.dart';
 import 'package:noted_frontend/src/shared/providers/auth/session.provider.dart';
 import 'package:noted_frontend/src/shared/views/home.view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,6 +17,11 @@ part 'router.provider.g.dart';
 
 @riverpod
 GoRouter router(RouterRef ref) {
+  final rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: "rootNavigator");
+  final shellNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: "shellNavigator");
+
   final loggedOutRoutes = [
     GoRoute(
       path: SignInView.route,
@@ -28,12 +36,14 @@ GoRouter router(RouterRef ref) {
       builder: (context, state) => const ForgottenPasswordView(),
     ),
     GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
       path: HomeView.route,
       builder: (context, state) => const HomeView(),
     ),
   ];
   final loggedInRoutes = [
     GoRoute(
+        parentNavigatorKey: shellNavigatorKey,
         path: DashboardView.route,
         builder: (context, state) => const DashboardView(),
         routes: [
@@ -45,15 +55,31 @@ GoRouter router(RouterRef ref) {
               })
         ]),
     GoRoute(
-      path: SettingsView.routeName,
-      builder: (context, state) => const SettingsView(),
-    ),
+        path: NotebookView.route,
+        builder: (context, state) {
+          final num id = num.parse(state.pathParameters['notebookId']!);
+          return NotebookView(
+            id,
+            key: ValueKey(id),
+          );
+        }),
+    GoRoute(
+        path: StarredView.route,
+        builder: (context, state) => const StarredView()),
+    GoRoute(
+        path: DeletedView.route,
+        builder: (context, state) => const DeletedView()),
+    // GoRoute(
+    //   parentNavigatorKey: shellNavigatorKey,
+    //   path: SettingsView.routeName,
+    //   builder: (context, state) => const SettingsView(),
+    // ),
   ];
-  final routes = [...loggedOutRoutes, ...loggedInRoutes];
-
+  ref.watch(sessionProvider);
   return GoRouter(
+      navigatorKey: rootNavigatorKey,
       redirect: (context, state) {
-        final isLoggedIn = ref.watch(sessionProvider.notifier).isLoggedIn;
+        final isLoggedIn = ref.read(sessionProvider.notifier).isLoggedIn;
         final currentRoute = state.fullPath;
 
         if (isLoggedIn &&
@@ -68,7 +94,15 @@ GoRouter router(RouterRef ref) {
 
         return null;
       },
-      routes: routes,
+      routes: [
+        ...loggedOutRoutes,
+        ShellRoute(
+          navigatorKey: shellNavigatorKey,
+          parentNavigatorKey: rootNavigatorKey,
+          routes: loggedInRoutes,
+          builder: (ctx, state, child) => SideMenuNav(child),
+        ),
+      ],
       initialLocation: HomeView.route);
 }
 

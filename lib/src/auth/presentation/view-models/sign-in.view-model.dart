@@ -23,8 +23,6 @@ class SignInViewModel extends _$SignInViewModel {
       print(state.error);
       return;
     }
-
-    ref.read(routerProvider).go(DashboardView.route);
   }
 
   Future<void> onSignInWithGooglePressed() {
