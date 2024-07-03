@@ -1,5 +1,4 @@
 import 'package:noted_frontend/src/auth/data/auth.repository.dart';
-import 'package:noted_frontend/src/auth/data/models/user-role.enum.dart';
 import 'package:noted_frontend/src/shared/providers/auth/session.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,13 +21,12 @@ class AuthService {
         _session = session;
 
   Future<void> signIn(String email, String password) async {
-    // final response = await _repository.signIn(email, password);
-    // _session.startSession(response.email, response.username, response.role);
-    _session.startSession(email, email, UserRole.admin);
+    final response = await _repository.signIn(email, password);
+    _session.startSession(response.email, response.username, response.role);
   }
 
   Future<void> signOut() async {
-    // await _repository.signOut();
+    await _repository.signOut();
     _session.endSession();
   }
 

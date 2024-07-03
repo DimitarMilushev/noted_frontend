@@ -38,7 +38,7 @@ class NotePreviewCard extends ConsumerWidget {
             SizedBox.fromSize(size: const Size.fromHeight(20)),
             Expanded(
               child: Text(
-                data.text,
+                data.content,
                 softWrap: true,
                 maxLines: 4,
                 textAlign: TextAlign.justify,
@@ -61,13 +61,13 @@ class NotePreviewCard extends ConsumerWidget {
 
 class NotePreviewCardData {
   final num id;
-  final String text;
+  final String content;
   final String title;
   final DateTime lastUpdated;
 
   NotePreviewCardData({
     required this.id,
-    required this.text,
+    required this.content,
     required this.title,
     required this.lastUpdated,
   });

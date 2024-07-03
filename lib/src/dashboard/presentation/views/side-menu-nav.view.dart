@@ -17,81 +17,77 @@ class SideMenuNav extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenuNav> {
-  final SideMenuController controller = SideMenuController();
   @override
   Widget build(BuildContext context) {
     final viewState = ref.watch(sideMenuNavViewModelProvider);
 
     return viewState.when(
-        error: (_, __) => Container(),
-        loading: () => Container(),
-        data: (data) {
-          controller.changePage(ref
-              .watch(sideMenuNavViewModelProvider.notifier)
-              .indexOfSelected());
-          return Row(
-            children: [
-              SideMenu(
-                controller: controller,
-                title: Column(
-                  children: [
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxHeight: 150,
-                        maxWidth: 150,
+        error: (err, __) => Center(child: Text(err.toString())),
+        loading: () => const CircularProgressIndicator(),
+        data: (data) => Row(
+              children: [
+                SideMenu(
+                  controller: ref
+                      .watch(sideMenuNavViewModelProvider.notifier)
+                      .controller,
+                  title: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 150,
+                          maxWidth: 150,
+                        ),
+                        child: Image.network(
+                          'https://png.pngtree.com/png-vector/20221128/ourmid/pngtree-cream-sticky-notes-paper-illustration-with-clip-white-transparent-background-png-image_6484210.png',
+                        ),
                       ),
-                      child: Image.network(
-                        'https://png.pngtree.com/png-vector/20221128/ourmid/pngtree-cream-sticky-notes-paper-illustration-with-clip-white-transparent-background-png-image_6484210.png',
+                      const Text("Noted v1.0"),
+                      const Divider(
+                        indent: 8.0,
+                        endIndent: 8.0,
                       ),
+                    ],
+                  ),
+                  items: [
+                    SideMenuItem(
+                      onTap: (_, __) {
+                        ref.read(routerProvider).go(DashboardView.route);
+                      },
+                      title: 'Home',
+                      icon: const Icon(Icons.home),
                     ),
-                    const Text("Noted v1.0"),
-                    const Divider(
-                      indent: 8.0,
-                      endIndent: 8.0,
+                    SideMenuExpansionItem(
+                        icon: Icon(Icons.book),
+                        title: "Notebooks",
+                        children: [..._getNotebookItems(data)]),
+                    SideMenuItem(
+                      onTap: (_, __) {
+                        ref.read(routerProvider).go(StarredView.route);
+                      },
+                      title: 'Starred',
+                      icon: const Icon(Icons.star),
+                    ),
+                    SideMenuItem(
+                      onTap: (_, __) {
+                        ref.read(routerProvider).go(DeletedView.route);
+                      },
+                      title: 'Deleted',
+                      icon: const Icon(Icons.delete),
+                    ),
+                    SideMenuItem(
+                      onTap: (_, __) {
+                        ref.read(authServiceProvider).signOut();
+                      },
+                      title: 'Logout',
+                      icon: const Icon(Icons.logout),
                     ),
                   ],
                 ),
-                items: [
-                  SideMenuItem(
-                    onTap: (_, __) {
-                      ref.read(routerProvider).go(DashboardView.route);
-                    },
-                    title: 'Home',
-                    icon: const Icon(Icons.home),
-                  ),
-                  SideMenuExpansionItem(
-                      icon: Icon(Icons.book),
-                      title: "Notebooks",
-                      children: [..._getNotebookItems(data)]),
-                  SideMenuItem(
-                    onTap: (_, __) {
-                      ref.read(routerProvider).go(StarredView.route);
-                    },
-                    title: 'Starred',
-                    icon: const Icon(Icons.star),
-                  ),
-                  SideMenuItem(
-                    onTap: (_, __) {
-                      ref.read(routerProvider).go(DeletedView.route);
-                    },
-                    title: 'Deleted',
-                    icon: const Icon(Icons.delete),
-                  ),
-                  SideMenuItem(
-                    onTap: (_, __) {
-                      ref.read(authServiceProvider).signOut();
-                    },
-                    title: 'Logout',
-                    icon: const Icon(Icons.logout),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: widget.child,
-              )
-            ],
-          );
-        });
+                Expanded(
+                  child: widget.child,
+                )
+              ],
+            ));
   }
 
   Iterable<SideMenuItem> _getNotebookItems(SideMenuNavData data) {

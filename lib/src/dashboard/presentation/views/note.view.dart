@@ -83,7 +83,7 @@ class _NoteViewState extends ConsumerState<NoteView> {
             controller: bodyController, //required
             htmlEditorOptions: HtmlEditorOptions(
               autoAdjustHeight: true,
-              initialText: data.data?.text,
+              initialText: data.data?.content,
               darkMode:
                   Theme.of(context).colorScheme.brightness == Brightness.dark,
             ),

@@ -9,6 +9,7 @@ class Notebook with _$Notebook {
     required num id,
     required String title,
     required DateTime lastUpdated,
-    List<NoteRef>? notes,
+    required DateTime dateCreated,
+    @Default([]) List<NoteRef> notes,
   }) = _Notebook;
 }

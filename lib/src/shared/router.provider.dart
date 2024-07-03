@@ -57,7 +57,7 @@ GoRouter router(RouterRef ref) {
     GoRoute(
         path: NotebookView.route,
         builder: (context, state) {
-          final num id = num.parse(state.pathParameters['notebookId']!);
+          final int id = int.parse(state.pathParameters['notebookId']!);
           return NotebookView(
             id,
             key: ValueKey(id),
@@ -89,7 +89,7 @@ GoRouter router(RouterRef ref) {
 
         if (!isLoggedIn &&
             loggedInRoutes.where((x) => x.path == currentRoute).isNotEmpty) {
-          return HomeView.route;
+          return SignInView.route;
         }
 
         return null;
@@ -103,7 +103,7 @@ GoRouter router(RouterRef ref) {
           builder: (ctx, state, child) => SideMenuNav(child),
         ),
       ],
-      initialLocation: HomeView.route);
+      initialLocation: SignInView.route);
 }
 
 extension RouterExtension on GoRouter {

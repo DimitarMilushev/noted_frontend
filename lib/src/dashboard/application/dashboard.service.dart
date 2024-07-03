@@ -1,6 +1,6 @@
 import 'package:noted_frontend/src/dashboard/data/dashboard.repository.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/load-dashboard-data.dto.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notebooks.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,11 +19,11 @@ class DashboardService {
     return _repository.loadDashboardData();
   }
 
-  Future<NotebooksDto> getNotebooks() {
-    return _repository.getBasicNotebooksData();
+  Future<NotebooksBasicDataDto> getNotebooks() {
+    return _repository.getNotebooksBasicData();
   }
 
-  Future<NotesPreviewDto> getNotesPreviewByNotebookId(num id) {
+  Future<NotebookDetailsDto> getNotesPreviewByNotebookId(num id) {
     return _repository.getNotesPreviewByNotebookId(id);
   }
 }

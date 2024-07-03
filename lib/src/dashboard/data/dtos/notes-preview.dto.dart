@@ -4,13 +4,17 @@ part 'notes-preview.dto.freezed.dart';
 part 'notes-preview.dto.g.dart';
 
 @freezed
-class NotesPreviewDto with _$NotesPreviewDto {
-  factory NotesPreviewDto({
+class NotebookDetailsDto with _$NotebookDetailsDto {
+  factory NotebookDetailsDto({
+    required num id,
+    required String title,
+    required DateTime lastUpdated,
+    required DateTime dateCreated,
     required List<NotePreviewDto> notes,
   }) = _NotesPreviewDto;
 
-  factory NotesPreviewDto.fromJson(Map<String, dynamic> json) =>
-      _$NotesPreviewDtoFromJson(json);
+  factory NotebookDetailsDto.fromJson(Map<String, dynamic> json) =>
+      _$NotebookDetailsDtoFromJson(json);
 }
 
 @freezed
@@ -18,8 +22,9 @@ class NotePreviewDto with _$NotePreviewDto {
   factory NotePreviewDto({
     required num id,
     required String title,
-    required String text,
+    required String content,
     required DateTime lastUpdated,
+    required DateTime dateCreated,
   }) = _NotePreviewDto;
 
   factory NotePreviewDto.fromJson(Map<String, dynamic> json) =>

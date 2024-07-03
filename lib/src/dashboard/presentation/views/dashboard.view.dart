@@ -74,10 +74,9 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           (x) => x.id == data.selectedNotebook,
         )
         .notes;
-    print(notes);
-    return notes!.map((x) => NotePreviewCard(NotePreviewCardData(
+    return notes.map((x) => NotePreviewCard(NotePreviewCardData(
           id: x.id,
-          text: x.text,
+          content: x.content,
           title: x.title,
           lastUpdated: x.lastUpdated,
         )));

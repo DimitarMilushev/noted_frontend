@@ -38,6 +38,7 @@ class DashboardViewModel extends _$DashboardViewModel {
       id: dto.id,
       title: dto.title,
       lastUpdated: dto.lastUpdated,
+      dateCreated: DateTime.now(), //TODO
       notes: dto.notes.map(_mapFromDashboardNoteDto).toList(),
     );
   }
@@ -45,9 +46,10 @@ class DashboardViewModel extends _$DashboardViewModel {
   NoteRef _mapFromDashboardNoteDto(LoadDashboardDataNoteDto dto) {
     return NoteRef(
       id: dto.id,
-      text: " ",
+      content: " ",
       title: dto.title,
       lastUpdated: dto.lastUpdated,
+      dateCreated: DateTime.now(), //TODO
     );
   }
 }

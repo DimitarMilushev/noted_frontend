@@ -7,7 +7,8 @@ class NoteRef with _$NoteRef {
   factory NoteRef({
     required num id,
     required String title,
-    required String text,
+    required String content,
     required DateTime lastUpdated,
+    required DateTime dateCreated,
   }) = _NoteRef;
 }
