@@ -19,7 +19,19 @@ class DashboardService {
     return _repository.loadDashboardData();
   }
 
-  Future<NotebooksBasicDataDto> getNotebooks() {
+  Future getLastUsedNotes() {
+    throw UnimplementedError();
+  }
+
+  Future getDeletedNotes() {
+    throw UnimplementedError();
+  }
+
+  Future getStarredNotes() {
+    throw UnimplementedError();
+  }
+
+  Future<NotebooksBasicDataDto> getNotebooksBasicData() {
     return _repository.getNotebooksBasicData();
   }
 

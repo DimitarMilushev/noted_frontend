@@ -5,12 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note-view.data.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note.view-model.dart';
-import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
 
 class NoteView extends ConsumerStatefulWidget {
   static const String route = '/note/:noteId';
-  static String getRouteForId(num id) =>
-      '${DashboardView.route}/note/${id.toString()}';
   final num noteId;
   const NoteView(this.noteId, {super.key});
 

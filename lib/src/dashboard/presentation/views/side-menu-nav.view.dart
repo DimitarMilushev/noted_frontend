@@ -57,7 +57,7 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
                       icon: const Icon(Icons.home),
                     ),
                     SideMenuExpansionItem(
-                        icon: Icon(Icons.book),
+                        icon: const Icon(Icons.book),
                         title: "Notebooks",
                         children: [..._getNotebookItems(data)]),
                     SideMenuItem(

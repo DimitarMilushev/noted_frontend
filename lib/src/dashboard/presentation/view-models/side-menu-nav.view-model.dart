@@ -30,9 +30,9 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
   @override
   bool updateShouldNotify(
       AsyncValue<SideMenuNavData> previous, AsyncValue<SideMenuNavData> next) {
-    // if (state.unwrapPrevious().hasValue) {
-    //   _sideMenuController.changePage(indexOfSelected());
-    // }
+    if (state.unwrapPrevious().hasValue) {
+      _sideMenuController.changePage(indexOfSelected());
+    }
     return super.updateShouldNotify(previous, next);
   }
 
@@ -41,7 +41,7 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
   @override
   Future<SideMenuNavData> build() async {
     _service = ref.read(dashboardServiceProvider);
-    final data = await _service.getNotebooks();
+    final data = await _service.getNotebooksBasicData();
     _initOptions(data.notebooks);
     return SideMenuNavData(
       notebooks: data.notebooks.map(_mapFromNotebookDto).toList(),

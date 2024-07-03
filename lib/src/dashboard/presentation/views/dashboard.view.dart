@@ -82,19 +82,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         )));
   }
 
-  Iterable<RichText> _notebooks(DashboardViewData data) {
-    return data.notebooks.map(
-      (x) => RichText(
-        text: TextSpan(
-          text: '${x.id}-${x.title}-${x.lastUpdated}',
-          children: x.notes!
-              .map((y) => TextSpan(text: '${y.id}-${y.title}-${y.lastUpdated}'))
-              .toList(),
-        ),
-      ),
-    );
-  }
-
   Iterable<NotePreviewCard> buildCards(List<NotePreviewCardData> data) {
     return data.map((x) => NotePreviewCard(x));
   }

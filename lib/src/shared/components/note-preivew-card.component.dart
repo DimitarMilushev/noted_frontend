@@ -11,7 +11,9 @@ class NotePreviewCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
-        ref.read(routerProvider).go(NoteView.getRouteForId(data.id));
+        ref
+            .read(routerProvider)
+            .go(NoteView.route.replaceAll(':noteId', '${data.id}'));
       },
       child: Container(
         decoration: BoxDecoration(

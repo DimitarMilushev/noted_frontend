@@ -43,44 +43,55 @@ GoRouter router(RouterRef ref) {
   ];
   final loggedInRoutes = [
     GoRoute(
-        parentNavigatorKey: shellNavigatorKey,
-        path: DashboardView.route,
-        builder: (context, state) => const DashboardView(),
-        routes: [
-          GoRoute(
-              path: NoteView.route.substring(1),
-              builder: (context, state) {
-                final num id = num.parse(state.pathParameters['noteId']!);
-                return NoteView(id);
-              })
-        ]),
+      parentNavigatorKey: shellNavigatorKey,
+      path: DashboardView.route,
+      builder: (context, state) => const DashboardView(),
+    ),
     GoRoute(
-        path: NotebookView.route,
-        builder: (context, state) {
-          final int id = int.parse(state.pathParameters['notebookId']!);
-          return NotebookView(
-            id,
-            key: ValueKey(id),
-          );
-        }),
+      path: NotebookView.route,
+      builder: (context, state) {
+        final int id = int.parse(state.pathParameters['notebookId']!);
+        return NotebookView(
+          id,
+          key: ValueKey(id),
+        );
+      },
+    ),
     GoRoute(
         path: StarredView.route,
         builder: (context, state) => const StarredView()),
     GoRoute(
         path: DeletedView.route,
         builder: (context, state) => const DeletedView()),
+    GoRoute(
+        path: NoteView.route,
+        builder: (context, state) {
+          final num id = num.parse(state.pathParameters['noteId']!);
+          return NoteView(id);
+        })
     // GoRoute(
     //   parentNavigatorKey: shellNavigatorKey,
     //   path: SettingsView.routeName,
     //   builder: (context, state) => const SettingsView(),
     // ),
   ];
+  // Routes that need to be protected when accessed without the required path
+  // variable.
+  final pathVariableOnlyRoutes = [
+    NoteView.route.replaceAll("/:noteId", ""),
+    NotebookView.route.replaceAll("/:notebookId", "")
+  ];
+
   ref.watch(sessionProvider);
   return GoRouter(
       navigatorKey: rootNavigatorKey,
       redirect: (context, state) {
         final isLoggedIn = ref.read(sessionProvider.notifier).isLoggedIn;
         final currentRoute = state.fullPath;
+
+        if (pathVariableOnlyRoutes.contains(currentRoute)) {
+          return DashboardView.route;
+        }
 
         if (isLoggedIn &&
             loggedOutRoutes.where((x) => x.path == currentRoute).isNotEmpty) {
