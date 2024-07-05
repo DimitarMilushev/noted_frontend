@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard-view.data.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard.view-model.dart';
 import 'package:noted_frontend/src/shared/components/note-preivew-card.component.dart';
 import 'package:noted_frontend/src/shared/providers/auth/session.provider.dart';

@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noted_frontend/src/dashboard/application/dashboard.service.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/update-note.dto.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/note.model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
