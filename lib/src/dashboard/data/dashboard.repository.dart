@@ -22,8 +22,9 @@ class DashboardRepository {
   }
 
   Future<NotebooksBasicDataDto> getNotebooksBasicData() async {
-    final response = await _client.get('/api/v1/notebooks/all');
-    return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
+    // final response = await _client.get('/api/v1/notebooks/all');
+    // return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
+    return NotebooksBasicDataDto(notebooks: []);
   }
 
   Future<NotebookDetailsDto> getNotesPreviewByNotebookId(num id) async {
