@@ -27,6 +27,9 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
         data: (data) => Row(
               children: [
                 SideMenu(
+                  style: SideMenuStyle(displayMode: _getDefaultDisplayMode()),
+                  showToggle: true,
+                  collapseWidth: 760,
                   controller: ref
                       .watch(sideMenuNavViewModelProvider.notifier)
                       .controller,
@@ -83,11 +86,20 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
                     ),
                   ],
                 ),
+                const VerticalDivider(),
                 Expanded(
                   child: widget.child,
                 )
               ],
             ));
+  }
+
+  SideMenuDisplayMode _getDefaultDisplayMode() {
+    // Large tablets to Desktop
+    final isLargeEnoughScreen = MediaQuery.of(context).size.width >= 768;
+    return isLargeEnoughScreen
+        ? SideMenuDisplayMode.open
+        : SideMenuDisplayMode.compact;
   }
 
   Iterable<SideMenuItem> _getNotebookItems(SideMenuNavData data) {
