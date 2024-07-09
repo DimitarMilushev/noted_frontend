@@ -48,4 +48,8 @@ class DashboardService {
       {String? title, String? content}) {
     return _repository.saveNoteContentById(id, title: title, content: content);
   }
+
+  Future<List<NotePreviewDto>> getLastUpdatedNotes() {
+    return _repository.getLastUpdatedNotes();
+  }
 }

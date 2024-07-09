@@ -12,8 +12,8 @@ class Session extends _$Session {
     return null;
   }
 
-  // bool get isLoggedIn => state.unwrapPrevious().valueOrNull != null;
-  bool get isLoggedIn => true;
+  bool get isLoggedIn => state.unwrapPrevious().valueOrNull != null;
+  // bool get isLoggedIn => true;
 
   void startSession(String email, String username, UserRole role) {
     final session = SessionData(

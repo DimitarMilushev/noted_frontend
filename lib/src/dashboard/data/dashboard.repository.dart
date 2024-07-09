@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/get-last-updated-notes.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/load-dashboard-data.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
@@ -22,9 +23,8 @@ class DashboardRepository {
   }
 
   Future<NotebooksBasicDataDto> getNotebooksBasicData() async {
-    // final response = await _client.get('/api/v1/notebooks/all');
-    // return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
-    return NotebooksBasicDataDto(notebooks: []);
+    final response = await _client.get('/api/v1/notebooks/all');
+    return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
   }
 
   Future<NotebookDetailsDto> getNotesPreviewByNotebookId(num id) async {
@@ -48,5 +48,10 @@ class DashboardRepository {
     );
 
     return NotePreviewDto.fromJson(response.data);
+  }
+
+  Future<List<NotePreviewDto>> getLastUpdatedNotes() async {
+    final response = await _client.get("/api/v1/notes/last-updated");
+    return GetLastUpdatedNotesDto.fromJson({'notes': response.data}).notes;
   }
 }

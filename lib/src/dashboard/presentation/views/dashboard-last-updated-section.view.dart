@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/note.model.dart';
+import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard-last-updated.view-model.dart';
 import 'package:noted_frontend/src/shared/components/note-preivew-card.component.dart';
 
-class DashboardLastUpdatedSection extends ConsumerWidget {
+class DashboardLastUpdatedView extends ConsumerStatefulWidget {
+  const DashboardLastUpdatedView({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notes = _notes(_notesMock);
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DashboardLastUpdatedViewState();
+}
+
+class _DashboardLastUpdatedViewState
+    extends ConsumerState<DashboardLastUpdatedView> {
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = ref.watch(dashboardLastUpdatedViewModelProvider);
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -22,60 +32,31 @@ class DashboardLastUpdatedSection extends ConsumerWidget {
                     const Divider(),
                   ])),
           SizedBox.fromSize(
-              size: Size.fromHeight(246),
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, index) => notes[index],
-                separatorBuilder: (_, index) => SizedBox.fromSize(
-                  size: Size.fromWidth(24),
-                ),
-                itemCount: notes.length,
-              ))
+              size: const Size.fromHeight(246),
+              child: viewModel.when(
+                  data: (data) {
+                    final notes = data.map(_mapFromNoteRef).toList();
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) => notes[index],
+                      separatorBuilder: (_, index) => SizedBox.fromSize(
+                        size: const Size.fromWidth(24),
+                      ),
+                      itemCount: notes.length,
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, __) => Text(err.toString())))
         ]));
   }
 
-  List<NotePreviewCard> _notes(List<NoteRef> notes) {
-    return notes
-        .map((x) => NotePreviewCard(NotePreviewCardData(
-              id: x.id,
-              content: x.content,
-              title: x.title,
-              lastUpdated: x.lastUpdated,
-            )))
-        .toList();
-  }
-
-  List<NoteRef> _notesMock = [
-    NoteRef(
-        id: 1,
-        title: 'title',
-        content: 'asdasd',
-        lastUpdated: DateTime.now(),
-        dateCreated: DateTime.now()),
-    NoteRef(
-        id: 2,
-        title: 'title',
-        content: 'asdasd',
-        lastUpdated: DateTime.now(),
-        dateCreated: DateTime.now()),
-    NoteRef(
-        id: 3,
-        title: 'title',
-        content: 'asdasd',
-        lastUpdated: DateTime.now(),
-        dateCreated: DateTime.now()),
-    NoteRef(
-        id: 4,
-        title: 'title',
-        content: 'asdasd',
-        lastUpdated: DateTime.now(),
-        dateCreated: DateTime.now()),
-    NoteRef(
-        id: 5,
-        title: 'title',
-        content: 'asdasd',
-        lastUpdated: DateTime.now(),
-        dateCreated: DateTime.now()),
-  ];
+  NotePreviewCard _mapFromNoteRef(NoteRef data) =>
+      NotePreviewCard(NotePreviewCardData(
+        id: data.id,
+        content: data.content,
+        title: data.title,
+        lastUpdated: data.lastUpdated,
+      ));
 }
