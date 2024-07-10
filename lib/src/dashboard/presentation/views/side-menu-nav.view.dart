@@ -102,18 +102,14 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
         : SideMenuDisplayMode.compact;
   }
 
-  Iterable<SideMenuItem> _getNotebookItems(SideMenuNavData data) {
-    final sorted = List.of(data.notebooks)
-      ..sort((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? 1 : 0);
-
-    return sorted.map((x) => SideMenuItem(
-          onTap: (_, __) {
-            ref
-                .read(sideMenuNavViewModelProvider.notifier)
-                .onNotebookSelected(x.id);
-          },
-          title: x.title,
-          icon: const Icon(Icons.book_outlined),
-        ));
-  }
+  Iterable<SideMenuItem> _getNotebookItems(SideMenuNavData data) =>
+      data.notebooks.map((x) => SideMenuItem(
+            onTap: (_, __) {
+              ref
+                  .read(sideMenuNavViewModelProvider.notifier)
+                  .onNotebookSelected(x.id);
+            },
+            title: x.title,
+            icon: const Icon(Icons.book_outlined),
+          ));
 }

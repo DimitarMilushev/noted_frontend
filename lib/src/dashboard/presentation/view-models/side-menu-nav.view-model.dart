@@ -27,25 +27,30 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
   late final List<String> _options;
   final SideMenuController _sideMenuController = SideMenuController();
 
-  @override
-  bool updateShouldNotify(
-      AsyncValue<SideMenuNavData> previous, AsyncValue<SideMenuNavData> next) {
-    if (state.unwrapPrevious().hasValue) {
-      _sideMenuController.changePage(indexOfSelected());
-    }
-    return super.updateShouldNotify(previous, next);
-  }
-
   SideMenuController get controller => _sideMenuController;
 
   @override
   Future<SideMenuNavData> build() async {
     _service = ref.read(dashboardServiceProvider);
     final data = await _service.getNotebooksBasicData();
-    _initOptions(data.notebooks);
+    final sortedData = _sortNotebooksByLastUpdatedDate(data.notebooks);
+    _initOptions(sortedData);
+    ref
+        .read(routerProvider)
+        .routerDelegate
+        .addListener(() => _sideMenuController.changePage(indexOfSelected()));
     return SideMenuNavData(
-      notebooks: data.notebooks.map(_mapFromNotebookDto).toList(),
+      notebooks: sortedData.map(_mapFromNotebookDto).toList(),
     );
+  }
+
+  List<NotebookBasicDataDto> _sortNotebooksByLastUpdatedDate(
+      List<NotebookBasicDataDto> data) {
+    final copy = List.of(data)
+      ..sort(
+        (prev, next) => prev.lastUpdated.isAfter(next.lastUpdated) ? 1 : 0,
+      );
+    return copy;
   }
 
   int indexOfSelected() {
@@ -65,8 +70,6 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
         lastUpdated: dto.lastUpdated,
         dateCreated: dto.dateCreated,
       );
-
-  Notebook? get selectedNotebook => state.unwrapPrevious().value?.selected;
 
   void _initOptions(List<NotebookBasicDataDto> notebooks) {
     _options = List.empty(growable: true);
