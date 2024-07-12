@@ -18,13 +18,15 @@ class DashboardRepository {
   DashboardRepository({required Dio client}) : _client = client;
 
   Future<LoadDashboardDataDto> loadDashboardData() async {
-    final response = await _client.get("/api/v1/users/dashboard-data");
-    return LoadDashboardDataDto.fromJson(response.data);
+    // final response = await _client.get("/api/v1/users/dashboard-data");
+    // return LoadDashboardDataDto.fromJson(response.data);
+    return dashboardData;
   }
 
   Future<NotebooksBasicDataDto> getNotebooksBasicData() async {
-    final response = await _client.get('/api/v1/notebooks/all');
-    return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
+    // final response = await _client.get('/api/v1/notebooks/all');
+    // return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
+    return NotebooksBasicDataDto(notebooks: notebookBasicDataList);
   }
 
   Future<NotebookDetailsDto> getNotesPreviewByNotebookId(num id) async {
@@ -55,3 +57,66 @@ class DashboardRepository {
     return GetLastUpdatedNotesDto.fromJson({'notes': response.data}).notes;
   }
 }
+
+var notebookBasicDataList = [
+  NotebookBasicDataDto(
+    id: 1,
+    title: 'Notebook 1',
+    lastUpdated: DateTime.now().subtract(Duration(days: 5)),
+    dateCreated: DateTime.now().subtract(Duration(days: 30)),
+  ),
+  NotebookBasicDataDto(
+    id: 2,
+    title: 'Notebook 2',
+    lastUpdated: DateTime.now().subtract(Duration(days: 10)),
+    dateCreated: DateTime.now().subtract(Duration(days: 60)),
+  ),
+  NotebookBasicDataDto(
+    id: 3,
+    title: 'Notebook 3',
+    lastUpdated: DateTime.now().subtract(Duration(days: 15)),
+    dateCreated: DateTime.now().subtract(Duration(days: 90)),
+  ),
+];
+
+var dashboardData = LoadDashboardDataDto(
+  id: 1,
+  notebooks: [
+    LoadDashboardDataNotebookDto(
+      id: 1,
+      title: 'Notebook 1',
+      lastUpdated: DateTime.now().subtract(Duration(days: 5)),
+      notes: [
+        LoadDashboardDataNoteDto(
+          id: 1,
+          title: 'Note 1',
+          lastUpdated: DateTime.now().subtract(Duration(days: 1)),
+        ),
+        LoadDashboardDataNoteDto(
+          id: 2,
+          title: 'Note 2',
+          lastUpdated: DateTime.now().subtract(Duration(days: 2)),
+        ),
+      ],
+    ),
+    LoadDashboardDataNotebookDto(
+      id: 2,
+      title: 'Notebook 2',
+      lastUpdated: DateTime.now().subtract(Duration(days: 6)),
+      notes: [
+        LoadDashboardDataNoteDto(
+          id: 3,
+          title: 'Note 3',
+          lastUpdated: DateTime.now().subtract(Duration(days: 3)),
+        ),
+        LoadDashboardDataNoteDto(
+          id: 4,
+          title: 'Note 4',
+          lastUpdated: DateTime.now().subtract(Duration(days: 4)),
+        ),
+      ],
+    ),
+  ],
+);
+  // Add more LoadDashboardDataDto objects if needed
+
