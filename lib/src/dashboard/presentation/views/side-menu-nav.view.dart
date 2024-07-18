@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:noted_frontend/src/auth/application/auth.service.dart';
+import 'package:noted_frontend/src/dashboard/presentation/models/notebook.model.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/side-menu-nav.view-model.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/deleted.view.dart';
@@ -36,7 +37,7 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
                   controller: ref
                       .watch(sideMenuNavViewModelProvider.notifier)
                       .controller,
-                  title: _SideMenuHeader(),
+                  title: const _SideNavHeader(),
                   items: [
                     SideMenuItem(
                       onTap: (_, __) {
@@ -117,20 +118,31 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
                     .textTheme
                     .headlineSmall
                     ?.copyWith(fontWeight: FontWeight.bold),
-                decoration: const InputDecoration(hintText: 'New note title'),
+                decoration:
+                    const InputDecoration(hintText: 'New notebook title'),
               ),
               primaryAction: DialogActionData(
                   text: "Create",
-                  onTap: () {
-                    ctx.pop();
+                  onTap: () async {
+                    await ref
+                        .read(sideMenuNavViewModelProvider.notifier)
+                        .onCreateNotebook(titleController.text);
+                    if (mounted) {
+                      ctx.pop();
+                    }
                   }),
             ));
   }
 }
 
-class _SideMenuHeader extends StatelessWidget {
-  const _SideMenuHeader({super.key});
+class _SideNavHeader extends ConsumerStatefulWidget {
+  const _SideNavHeader({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => __SideNavHeaderState();
+}
+
+class __SideNavHeaderState extends ConsumerState<_SideNavHeader> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -148,9 +160,9 @@ class _SideMenuHeader extends StatelessWidget {
         Align(
           alignment: Alignment.bottomRight,
           child: IconButton(
-            icon: Icon(Icons.edit_document),
+            icon: const Icon(Icons.edit_document),
             tooltip: 'Create new note',
-            onPressed: () => _onCreateNotebookPressed(context),
+            onPressed: _onCreateNotePressed,
           ),
         ),
         const Divider(
@@ -161,15 +173,33 @@ class _SideMenuHeader extends StatelessWidget {
     ]);
   }
 
-  Future _onCreateNotebookPressed(BuildContext context) {
+  Future _onCreateNotePressed() {
     final TextEditingController titleController = TextEditingController();
     final HtmlEditorController bodyController = HtmlEditorController();
+    final List<Notebook> list =
+        ref.watch(sideMenuNavViewModelProvider).value!.notebooks;
+    Notebook dropdownValue = list.first;
+    //TODO: adjust for 0 notebooks
     return showGeneralDialog(
         context: context,
         pageBuilder: (ctx, _, __) {
           return CommonDialogComponent(
             body: Column(
               children: [
+                DropdownMenu<Notebook>(
+                    initialSelection: list.first,
+                    onSelected: (Notebook? value) {
+                      // This is called when the user selects an item.
+                      if (value == null) return;
+                      setState(() {
+                        dropdownValue = value;
+                      });
+                    },
+                    dropdownMenuEntries:
+                        list.map<DropdownMenuEntry<Notebook>>((Notebook value) {
+                      return DropdownMenuEntry<Notebook>(
+                          value: value, label: value.title);
+                    }).toList()),
                 TextField(
                   controller: titleController,
                   style: Theme.of(ctx)
@@ -180,14 +210,23 @@ class _SideMenuHeader extends StatelessWidget {
                 ),
                 HtmlEditor(
                   controller: bodyController,
-                  otherOptions: OtherOptions(height: 264),
+                  otherOptions: const OtherOptions(height: 264),
                 ),
               ],
             ),
             primaryAction: DialogActionData(
                 text: "Create",
-                onTap: () {
-                  ctx.pop();
+                onTap: () async {
+                  await ref
+                      .read(sideMenuNavViewModelProvider.notifier)
+                      .onCreateNote(
+                        titleController.text,
+                        await bodyController.getText(),
+                        dropdownValue.id,
+                      );
+                  if (ctx.mounted) {
+                    ctx.pop();
+                  }
                 }),
           );
         });

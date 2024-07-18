@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/create-note.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/create-notebook.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/get-last-updated-notes.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/load-dashboard-data.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
@@ -18,15 +20,34 @@ class DashboardRepository {
   DashboardRepository({required Dio client}) : _client = client;
 
   Future<LoadDashboardDataDto> loadDashboardData() async {
-    // final response = await _client.get("/api/v1/users/dashboard-data");
-    // return LoadDashboardDataDto.fromJson(response.data);
-    return dashboardData;
+    final response = await _client.get("/api/v1/users/dashboard-data");
+    return LoadDashboardDataDto.fromJson(response.data);
+  }
+
+  Future<NotePreviewDto> createNote(
+      String title, String content, num notebookId) async {
+    final dto =
+        CreateNoteDto(title: title, content: content, notebookId: notebookId);
+    final response = await _client.post(
+      '/api/v1/notes',
+      data: dto.toJson(),
+    );
+    return NotePreviewDto.fromJson(response.data);
+  }
+
+  Future<NotebookDetailsDto> createNotebook(String title) async {
+    final dto = CreateNotebookDto(title: title);
+    final response = await _client.post(
+      '/api/v1/notebooks',
+      data: dto.toJson(),
+    );
+
+    return NotebookDetailsDto.fromJson(response.data);
   }
 
   Future<NotebooksBasicDataDto> getNotebooksBasicData() async {
-    // final response = await _client.get('/api/v1/notebooks/all');
-    // return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
-    return NotebooksBasicDataDto(notebooks: notebookBasicDataList);
+    final response = await _client.get('/api/v1/notebooks/all');
+    return NotebooksBasicDataDto.fromJson({'notebooks': response.data});
   }
 
   Future<NotebookDetailsDto> getNotesPreviewByNotebookId(num id) async {

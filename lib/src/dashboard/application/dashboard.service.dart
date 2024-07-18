@@ -19,8 +19,13 @@ class DashboardService {
     return _repository.loadDashboardData();
   }
 
-  Future getLastUsedNotes() {
-    throw UnimplementedError();
+  Future<NotebookDetailsDto> createNotebook(String title) {
+    return _repository.createNotebook(title);
+  }
+
+  Future<NotePreviewDto> createNote(
+      String title, String content, num notebookId) {
+    return _repository.createNote(title, content, notebookId);
   }
 
   Future getDeletedNotes() {

@@ -3,6 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noted_frontend/src/dashboard/application/dashboard.service.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/notebook.model.dart';
+import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard-last-updated.view-model.dart';
+import 'package:noted_frontend/src/dashboard/presentation/view-models/note.view-model.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/deleted.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/notebook.view.dart';
@@ -40,8 +42,43 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
         .routerDelegate
         .addListener(() => _sideMenuController.changePage(indexOfSelected()));
     return SideMenuNavData(
-      notebooks: sortedData.map(_mapFromNotebookDto).toList(),
-    );
+        notebooks: sortedData.map(_mapFromNotebookDto).toList());
+  }
+
+  Future<void> onCreateNotebook(String title) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final added = await _service.createNotebook(title);
+      final listCopy = List.of([
+        Notebook(
+          id: added.id,
+          title: added.title,
+          lastUpdated: added.lastUpdated,
+          dateCreated: added.dateCreated,
+        ),
+        ...state.value!.notebooks,
+      ]);
+
+      return state.value!.copyWith(notebooks: listCopy);
+    });
+  }
+
+  Future<void> onCreateNote(
+      String title, String content, num notebookId) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await _service.createNote(title, content, notebookId);
+      //TODO: update providers
+      if (ref.read(dashboardLastUpdatedViewModelProvider).hasValue) {
+        ref.invalidate(dashboardLastUpdatedViewModelProvider);
+      }
+
+      if (_selectedNotebookId != -1 &&
+          ref.read(noteViewModelProvider.call(_selectedNotebookId)).hasValue) {
+        ref.invalidate(noteViewModelProvider.call(_selectedNotebookId));
+      }
+      return state.value!;
+    });
   }
 
   List<NotebookBasicDataDto> _sortNotebooksByLastUpdatedDate(
@@ -56,6 +93,16 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
   int indexOfSelected() {
     final path = ref.read(routerProvider).currentPath;
     return _options.indexOf(path);
+  }
+
+//TODO:adjust
+  num get _selectedNotebookId {
+    final path = ref.read(routerProvider).currentPath;
+    if (!path.contains(
+        NotebookView.route.substring(0, NotebookView.route.lastIndexOf('/')))) {
+      return -1;
+    }
+    return int.parse(path.substring(path.lastIndexOf('/') + 1));
   }
 
   void onNotebookSelected(num id) {
