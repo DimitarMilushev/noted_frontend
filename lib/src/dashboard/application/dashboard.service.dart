@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:noted_frontend/src/dashboard/data/dashboard.repository.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/load-dashboard-data.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/notebook-details.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/update-notebook-title-response.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dashboard.service.g.dart';
@@ -19,13 +23,20 @@ class DashboardService {
     return _repository.loadDashboardData();
   }
 
-  Future<NotebookDetailsDto> createNotebook(String title) {
+  Future<NotebookBasicDataDto> createNotebook(String title) {
     return _repository.createNotebook(title);
   }
 
-  Future<NotePreviewDto> createNote(
-      String title, String content, num notebookId) {
-    return _repository.createNote(title, content, notebookId);
+  Future<void> deleteNotebook(num id) async {
+    await _repository.deleteNotebook(id);
+  }
+
+  Future<void> createNote(String title, String content, num notebookId) async {
+    await _repository.createNote(title, content, notebookId);
+  }
+
+  Future<void> deleteNote(num id) async {
+    await _repository.deleteNote(id);
   }
 
   Future getDeletedNotes() {
@@ -49,12 +60,17 @@ class DashboardService {
     return _repository.getNoteDetailsById(id);
   }
 
-  Future<NotePreviewDto> saveNoteContentById(num id,
+  Future<NotePreviewDto> saveNoteChangesById(num id,
       {String? title, String? content}) {
-    return _repository.saveNoteContentById(id, title: title, content: content);
+    return _repository.saveNoteChangesById(id, title: title, content: content);
   }
 
   Future<List<NotePreviewDto>> getLastUpdatedNotes() {
     return _repository.getLastUpdatedNotes();
+  }
+
+  Future<UpdateNotebookTitleResponseDto> saveNotebookChanges(
+      int id, String title) {
+    return _repository.saveNotebookTitle(id, title);
   }
 }

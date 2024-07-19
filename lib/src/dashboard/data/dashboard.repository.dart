@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/create-note.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/create-notebook.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/get-last-updated-notes.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/load-dashboard-data.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/notebook-details.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/notebooks-basic-data.dto.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/update-note.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/update-notebook-title-response.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/update-notebook-title.dto.dart';
 import 'package:noted_frontend/src/shared/dio.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,25 +28,23 @@ class DashboardRepository {
     return LoadDashboardDataDto.fromJson(response.data);
   }
 
-  Future<NotePreviewDto> createNote(
-      String title, String content, num notebookId) async {
+  Future<void> createNote(String title, String content, num notebookId) async {
     final dto =
         CreateNoteDto(title: title, content: content, notebookId: notebookId);
-    final response = await _client.post(
+    await _client.post(
       '/api/v1/notes',
       data: dto.toJson(),
     );
-    return NotePreviewDto.fromJson(response.data);
   }
 
-  Future<NotebookDetailsDto> createNotebook(String title) async {
+  Future<NotebookBasicDataDto> createNotebook(String title) async {
     final dto = CreateNotebookDto(title: title);
     final response = await _client.post(
       '/api/v1/notebooks',
       data: dto.toJson(),
     );
 
-    return NotebookDetailsDto.fromJson(response.data);
+    return NotebookBasicDataDto.fromJson(response.data);
   }
 
   Future<NotebooksBasicDataDto> getNotebooksBasicData() async {
@@ -60,7 +62,7 @@ class DashboardRepository {
     return NotePreviewDto.fromJson(response.data);
   }
 
-  Future<NotePreviewDto> saveNoteContentById(num id,
+  Future<NotePreviewDto> saveNoteChangesById(num id,
       {String? title, String? content}) async {
     // if (title == null && content == null) return;
     // TODO: Shouldn't be possible
@@ -76,6 +78,21 @@ class DashboardRepository {
   Future<List<NotePreviewDto>> getLastUpdatedNotes() async {
     final response = await _client.get("/api/v1/notes/last-updated");
     return GetLastUpdatedNotesDto.fromJson({'notes': response.data}).notes;
+  }
+
+  Future<void> deleteNotebook(num id) async {
+    await _client.delete("/api/v1/notebooks/$id");
+  }
+
+  Future<void> deleteNote(num id) async {
+    await _client.delete("/api/v1/notes/$id");
+  }
+
+  Future<UpdateNotebookTitleResponseDto> saveNotebookTitle(
+      int id, String title) async {
+    final dto = UpdateNotebookTitleDto(title: title);
+    final response = await _client.patch('/api/v1/notebooks/$id', data: dto);
+    return UpdateNotebookTitleResponseDto.fromJson(response.data);
   }
 }
 

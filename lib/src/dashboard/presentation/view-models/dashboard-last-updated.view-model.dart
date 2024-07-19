@@ -1,5 +1,5 @@
 import 'package:noted_frontend/src/dashboard/application/dashboard.service.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/note.model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

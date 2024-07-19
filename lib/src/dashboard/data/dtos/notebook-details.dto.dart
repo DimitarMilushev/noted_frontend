@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
 
-part 'notes-preview.dto.freezed.dart';
-part 'notes-preview.dto.g.dart';
+part 'notebook-details.dto.freezed.dart';
+part 'notebook-details.dto.g.dart';
 
 @freezed
 class NotebookDetailsDto with _$NotebookDetailsDto {
@@ -15,18 +16,4 @@ class NotebookDetailsDto with _$NotebookDetailsDto {
 
   factory NotebookDetailsDto.fromJson(Map<String, dynamic> json) =>
       _$NotebookDetailsDtoFromJson(json);
-}
-
-@freezed
-class NotePreviewDto with _$NotePreviewDto {
-  factory NotePreviewDto({
-    required num id,
-    required String title,
-    required String content,
-    required DateTime lastUpdated,
-    required DateTime dateCreated,
-  }) = _NotePreviewDto;
-
-  factory NotePreviewDto.fromJson(Map<String, dynamic> json) =>
-      _$NotePreviewDtoFromJson(json);
 }

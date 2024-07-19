@@ -25,15 +25,14 @@ class SideMenuNavData with _$SideMenuNavData {
 
 @riverpod
 class SideMenuNavViewModel extends _$SideMenuNavViewModel {
-  late final DashboardService _service;
-  late final List<String> _options;
+  late final DashboardService _service = ref.read(dashboardServiceProvider);
+  final List<String> _options = List.empty(growable: true);
   final SideMenuController _sideMenuController = SideMenuController();
 
   SideMenuController get controller => _sideMenuController;
 
   @override
   Future<SideMenuNavData> build() async {
-    _service = ref.read(dashboardServiceProvider);
     final data = await _service.getNotebooksBasicData();
     final sortedData = _sortNotebooksByLastUpdatedDate(data.notebooks);
     _initOptions(sortedData);
@@ -119,7 +118,7 @@ class SideMenuNavViewModel extends _$SideMenuNavViewModel {
       );
 
   void _initOptions(List<NotebookBasicDataDto> notebooks) {
-    _options = List.empty(growable: true);
+    _options.clear();
     _options.add(DashboardView.route);
     for (var nb in notebooks) {
       _options.add(NotebookView.route.replaceFirst(":notebookId", '${nb.id}'));

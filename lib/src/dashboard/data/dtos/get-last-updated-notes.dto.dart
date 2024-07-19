@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
 
 part 'get-last-updated-notes.dto.freezed.dart';
 part 'get-last-updated-notes.dto.g.dart';

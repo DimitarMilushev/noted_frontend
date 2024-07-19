@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noted_frontend/src/dashboard/application/dashboard.service.dart';
-import 'package:noted_frontend/src/dashboard/data/dtos/notes-preview.dto.dart';
+import 'package:noted_frontend/src/dashboard/data/dtos/note-preview.dto.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/note.model.dart';
+import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard-last-updated.view-model.dart';
+import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
+import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'note.view-model.g.dart';
@@ -31,12 +34,36 @@ class NoteViewModel extends _$NoteViewModel {
     return NoteViewData(noteData: _mapFromNoteDetailsDto(dto));
   }
 
-  Future<void> saveChanges(String fieldTitle, String fieldContent) async {
+  NoteRef _mapFromNoteDetailsDto(NotePreviewDto dto) => NoteRef(
+        id: dto.id,
+        title: dto.title,
+        content: dto.content,
+        lastUpdated: dto.lastUpdated,
+        dateCreated: dto.dateCreated,
+      );
+
+  Future onDeletePressed() async {
+    final stateSnapshot = state.value!;
+    state = const AsyncLoading();
+    try {
+      await _service.deleteNote(id);
+      if (ref.read(dashboardLastUpdatedViewModelProvider).hasValue) {
+        ref.invalidate(dashboardLastUpdatedViewModelProvider);
+      }
+      ref.read(routerProvider).canPop()
+          ? ref.read(routerProvider).pop()
+          : ref.read(routerProvider).go(DashboardView.route);
+    } catch (ex) {
+      state = AsyncData(stateSnapshot);
+    }
+  }
+
+  Future<void> onSavePressed(String fieldTitle, String fieldContent) async {
     if (!state.unwrapPrevious().hasValue || state.isLoading) return;
 
     state = AsyncData(state.value!.copyWith(isSaving: true));
     state = await AsyncValue.guard(() async {
-      final updated = await _service.saveNoteContentById(
+      final updated = await _service.saveNoteChangesById(
         state.value!.noteData.id,
         title: state.value!.noteData.title != fieldTitle ? fieldTitle : null,
         content:
@@ -48,12 +75,4 @@ class NoteViewModel extends _$NoteViewModel {
       );
     });
   }
-
-  NoteRef _mapFromNoteDetailsDto(NotePreviewDto dto) => NoteRef(
-        id: dto.id,
-        title: dto.title,
-        content: dto.content,
-        lastUpdated: dto.lastUpdated,
-        dateCreated: dto.dateCreated,
-      );
 }

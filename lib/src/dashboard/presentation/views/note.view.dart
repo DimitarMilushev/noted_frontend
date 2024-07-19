@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note.view-model.dart';
+import 'package:noted_frontend/src/shared/components/popup-menu-icon-option.component.dart';
 
 class NoteView extends ConsumerStatefulWidget {
   static const String route = '/note/:noteId';
@@ -55,14 +56,14 @@ class _NoteViewState extends ConsumerState<NoteView> {
 
     return Column(
       children: [
-        _NoteToolbar(
-          onSavePressed: () async {
-            final String bodyContent = await bodyController.getText();
-            await ref
-                .read(noteViewModelProvider(widget.noteId).notifier)
-                .saveChanges(titleController.text, bodyContent);
-          },
-          isSaving: data.isSaving,
+        Align(
+          child: _NoteViewPopupMenu(
+            data.noteData.id,
+            titleController,
+            bodyController,
+            data.isSaving,
+          ),
+          alignment: Alignment.topRight,
         ),
         Padding(
           padding: const EdgeInsets.all(24),
@@ -88,29 +89,68 @@ class _NoteViewState extends ConsumerState<NoteView> {
   }
 }
 
-class _NoteToolbar extends StatelessWidget {
+class _NoteViewPopupMenu extends ConsumerWidget {
+  final num id;
+  final TextEditingController titleController;
+  final HtmlEditorController bodyController;
   final bool isSaving;
-  final Function() onSavePressed;
-  const _NoteToolbar(
-      {super.key, required this.isSaving, required this.onSavePressed});
+
+  const _NoteViewPopupMenu(
+      this.id, this.titleController, this.bodyController, this.isSaving,
+      {super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Container(
-        height: 32,
-        alignment: AlignmentDirectional.centerEnd,
-        child: isSaving
-            ? const CircularProgressIndicator()
-            : GestureDetector(
-                onTap: onSavePressed,
-                child: const Icon(
-                  Icons.edit_document,
-                  size: 32,
-                ),
-              ),
-      ),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton(
+        itemBuilder: (context) => [
+              PopupMenuItem(
+                  onTap: ref
+                      .read(noteViewModelProvider.call(id).notifier)
+                      .onDeletePressed,
+                  child: const PopupMenuIconOption(
+                    label: "Delete",
+                    icon: Icons.delete,
+                  )),
+              PopupMenuItem(
+                  enabled: !isSaving,
+                  onTap: () async {
+                    final bodyText = await bodyController.getText();
+                    await ref
+                        .read(noteViewModelProvider.call(id).notifier)
+                        .onSavePressed(titleController.value.text, bodyText);
+                  },
+                  child: PopupMenuIconOption(
+                    label: "Save",
+                    icon: Icons.save,
+                  )),
+            ]);
   }
 }
+
+
+// class _NoteToolbar extends StatelessWidget {
+//   final bool isSaving;
+//   final Function() onSavePressed;
+//   const _NoteToolbar(
+//       {super.key, required this.isSaving, required this.onSavePressed});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(24),
+//       child: Container(
+//         height: 32,
+//         alignment: AlignmentDirectional.centerEnd,
+//         child: isSaving
+//             ? const CircularProgressIndicator()
+//             : GestureDetector(
+//                 onTap: onSavePressed,
+//                 child: const Icon(
+//                   Icons.edit_document,
+//                   size: 32,
+//                 ),
+//               ),
+//       ),
+//     );
+//   }
+// }
