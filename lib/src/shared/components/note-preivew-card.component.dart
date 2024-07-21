@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/note.view.dart';
+import 'package:noted_frontend/src/shared/helpers/html-content.helper.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 
 class NotePreviewCard extends ConsumerWidget {
@@ -23,6 +24,7 @@ class NotePreviewCard extends ConsumerWidget {
           padding: const EdgeInsets.all(12),
           constraints: const BoxConstraints.expand(width: 244, height: 244),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
                 alignment: AlignmentDirectional.topStart,
@@ -40,10 +42,10 @@ class NotePreviewCard extends ConsumerWidget {
               SizedBox.fromSize(size: const Size.fromHeight(20)),
               Expanded(
                 child: Text(
-                  data.content,
+                  HtmlContentHelper.convertToPlainText(data.content),
                   softWrap: true,
                   maxLines: 4,
-                  textAlign: TextAlign.justify,
+                  textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey,
                         overflow: TextOverflow.ellipsis,
