@@ -22,12 +22,16 @@ class AuthService {
 
   Future<void> signIn(String email, String password) async {
     final response = await _repository.signIn(email, password);
-    _session.startSession(response.email, response.username, response.role);
+    await _session.startSession(
+      response.email,
+      response.username,
+      response.role,
+    );
   }
 
   Future<void> signOut() async {
     await _repository.signOut();
-    _session.endSession();
+    await _session.endSession();
   }
 
   Future<void> signUp(String email, String username, String password) async {

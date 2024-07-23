@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
+import 'package:noted_frontend/src/shared/constants/environment.constants.dart';
+import 'package:noted_frontend/src/shared/dtos/api-exception.dto.dart';
+import 'package:noted_frontend/src/shared/providers/auth/session.provider.dart';
+import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
@@ -18,12 +24,12 @@ Dio dio(DioRef ref) {
   } else {
     instance = Dio(_qaOptions)..interceptors.add(CookieManager(CookieJar()));
   }
-
+  instance.interceptors.add(HttpInterceptor(ref));
   return instance;
 }
 
 final _qaOptions = BaseOptions(
-  baseUrl: dotenv.get("APP_URI"),
+  baseUrl: EnvironmentConstants.appURI,
   contentType: "application/json",
   responseType: ResponseType.json,
   receiveTimeout: const Duration(seconds: 8),
@@ -36,9 +42,9 @@ class HttpInterceptor implements Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.error != null) {
-      print(err.error);
-      print(err.message);
+    if (err.response?.data != null) {
+      final data = ApiExceptionDto.fromJson(err.response?.data);
+      if (_shouldAuthenticate(data.status)) handleUnauthencated();
     }
 
     handler.next(err);
@@ -46,16 +52,21 @@ class HttpInterceptor implements Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('Request');
-    print(options.extra);
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print('response');
-    print(response.data);
-
     handler.next(response);
+  }
+
+  bool _shouldAuthenticate(int statusCode) {
+    return statusCode == HttpStatus.unauthorized &&
+        ref.read(sessionProvider.notifier).isLoggedIn;
+  }
+
+  void handleUnauthencated() {
+    ref.read(sessionProvider.notifier).endSession();
+    ref.read(routerProvider).go(SignInView.route);
   }
 }
