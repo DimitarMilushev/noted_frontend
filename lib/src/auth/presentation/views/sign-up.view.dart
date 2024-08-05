@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noted_frontend/src/auth/presentation/view-models/sign-in.view-model.dart';
+import 'package:noted_frontend/src/auth/presentation/view-models/sign-up.view-model.dart';
 
 class SignUpView extends ConsumerStatefulWidget {
   static const String route = "/sign-up";
@@ -18,10 +18,10 @@ class _SignInViewState extends ConsumerState<SignUpView> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  late final SignInViewModel viewModel;
+  late final SignUpViewModel viewModel;
   @override
   void initState() {
-    viewModel = ref.read(signInViewModelProvider.notifier);
+    viewModel = ref.read(signUpViewModelProvider.notifier);
     super.initState();
   }
 
@@ -83,7 +83,7 @@ class _UserDataForm extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
-  final SignInViewModel viewModel;
+  final SignUpViewModel viewModel;
 
   const _UserDataForm({
     required this.emailController,
@@ -126,8 +126,9 @@ class _UserDataForm extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(minimumSize: const Size(128, 48)),
-            onPressed: () => viewModel.signIn(
+            onPressed: () => viewModel.signUp(
               emailController.value.text,
+              usernameController.value.text,
               passwordController.value.text,
             ),
             child: const Text("Register"),
