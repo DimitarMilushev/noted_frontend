@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:noted_frontend/src/auth/presentation/view-models/sign-in.view-model.dart';
 
 class SignInView extends ConsumerStatefulWidget {
@@ -61,24 +60,24 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     "Sign in",
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FlutterSocialButton(
-                          mini: true,
-                          buttonType: ButtonType.github,
-                          onTap: viewModel.onSignInWithGithubPressed,
-                        ),
-                        FlutterSocialButton(
-                          mini: true,
-                          buttonType: ButtonType.google,
-                          onTap: viewModel.onSignInWithGooglePressed,
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 24),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       FlutterSocialButton(
+                  //         mini: true,
+                  //         buttonType: ButtonType.github,
+                  //         onTap: viewModel.onSignInWithGithubPressed,
+                  //       ),
+                  //       FlutterSocialButton(
+                  //         mini: true,
+                  //         buttonType: ButtonType.google,
+                  //         onTap: viewModel.onSignInWithGooglePressed,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   _UsernamePasswordForm(
                       emailController: emailController,
                       passwordController: passwordController,

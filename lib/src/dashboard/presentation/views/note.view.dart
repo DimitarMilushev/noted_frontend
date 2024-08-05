@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/note.view-model.dart';
+import 'package:noted_frontend/src/shared/components/loader-screen.component.dart';
 import 'package:noted_frontend/src/shared/components/popup-menu-icon-option.component.dart';
 
 class NoteView extends ConsumerStatefulWidget {
@@ -39,10 +40,10 @@ class _NoteViewState extends ConsumerState<NoteView> {
             ),
             constraints: BoxConstraints(maxWidth: 1024),
             child: viewState.when(
-                data: (data) => _onData(data),
-                error: (_, __) => Container(),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator())),
+              data: (data) => _onData(data),
+              error: (_, __) => Container(),
+              loading: LoaderScreen.transparent,
+            ),
           ),
         ),
       ],

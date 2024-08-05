@@ -18,7 +18,8 @@ class SignUpViewModel extends _$SignUpViewModel {
   Future<void> signUp(String email, String username, String password) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-        () => _service.signUp(email, username, password));
+      () => _service.signUp(email, username, password),
+    );
     if (state.hasError) {
       print('Has Error!');
       print(state.error);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noted_frontend/src/dashboard/presentation/models/note.model.dart';
 import 'package:noted_frontend/src/dashboard/presentation/view-models/dashboard-last-updated.view-model.dart';
+import 'package:noted_frontend/src/shared/components/loader-screen.component.dart';
 import 'package:noted_frontend/src/shared/components/note-preivew-card.component.dart';
 
 class DashboardLastUpdatedView extends ConsumerStatefulWidget {
@@ -46,8 +47,7 @@ class _DashboardLastUpdatedViewState
                       itemCount: notes.length,
                     );
                   },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  loading: LoaderScreen.transparent,
                   error: (err, __) => Text(err.toString())))
         ]));
   }

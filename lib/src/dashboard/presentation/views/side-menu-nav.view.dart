@@ -10,6 +10,7 @@ import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.d
 import 'package:noted_frontend/src/dashboard/presentation/views/deleted.view.dart';
 import 'package:noted_frontend/src/dashboard/presentation/views/starred.view.dart';
 import 'package:noted_frontend/src/shared/components/common-dialog.component.dart';
+import 'package:noted_frontend/src/shared/components/loader-screen.component.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 
 class SideMenuNav extends ConsumerStatefulWidget {
@@ -27,7 +28,7 @@ class _SideMenuState extends ConsumerState<SideMenuNav> {
 
     return viewState.when(
         error: (err, __) => Center(child: Text(err.toString())),
-        loading: () => const CircularProgressIndicator(),
+        loading: LoaderScreen.dimmed,
         data: (data) => Row(
               children: [
                 SideMenu(
