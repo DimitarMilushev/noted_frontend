@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:noted_frontend/src/auth/application/auth.service.dart';
-import 'package:noted_frontend/src/dashboard/presentation/views/dashboard.view.dart';
+import 'package:noted_frontend/src/auth/presentation/views/sign-in.view.dart';
 import 'package:noted_frontend/src/shared/router.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,7 +24,12 @@ class SignUpViewModel extends _$SignUpViewModel {
       print(state.error);
       return;
     }
-    ref.read(routerProvider).go(DashboardView.route);
+
+    final encodedEmail = const Base64Codec().encode(email.codeUnits);
+    final encodedPassword = const Base64Codec().encode(password.codeUnits);
+    ref.read(routerProvider).go(
+          "${SignInView.route}?email=$encodedEmail&password=$encodedPassword",
+        );
   }
 
   Future<void> onSignUpWithGooglePressed() {

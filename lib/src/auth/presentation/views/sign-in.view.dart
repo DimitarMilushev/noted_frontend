@@ -5,19 +5,26 @@ import 'package:noted_frontend/src/auth/presentation/view-models/sign-in.view-mo
 
 class SignInView extends ConsumerStatefulWidget {
   static const String route = "/sign-in";
-  const SignInView({super.key});
+  final String? email;
+  final String? password;
+  const SignInView({
+    super.key,
+    this.email,
+    this.password,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignInViewState();
 }
 
 class _SignInViewState extends ConsumerState<SignInView> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
+  late final TextEditingController emailController, passwordController;
   late final SignInViewModel viewModel;
+
   @override
   void initState() {
+    emailController = TextEditingController(text: widget.email);
+    passwordController = TextEditingController(text: widget.password);
     viewModel = ref.read(signInViewModelProvider.notifier);
     super.initState();
   }

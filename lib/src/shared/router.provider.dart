@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noted_frontend/src/auth/presentation/views/forgotten-password.view.dart';
@@ -24,9 +26,24 @@ GoRouter router(RouterRef ref) {
 
   final loggedOutRoutes = [
     GoRoute(
-      path: SignInView.route,
-      builder: (context, state) => const SignInView(),
-    ),
+        path: SignInView.route,
+        builder: (context, state) {
+          String? email = state.uri.queryParameters['email'];
+          String? password = state.uri.queryParameters['password'];
+          try {
+            if (email != null) {
+              email = utf8.decode(const Base64Codec().decode(email));
+            }
+            if (password != null) {
+              password = utf8.decode(const Base64Codec().decode(password));
+            }
+          } catch (ex) {
+            //TODO: Logging
+            return const SignInView();
+          }
+
+          return SignInView(email: email, password: password);
+        }),
     GoRoute(
       path: SignUpView.route,
       builder: (context, state) => const SignUpView(),
