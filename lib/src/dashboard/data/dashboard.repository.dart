@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/create-note.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/create-notebook.dto.dart';
 import 'package:noted_frontend/src/dashboard/data/dtos/get-last-updated-notes.dto.dart';

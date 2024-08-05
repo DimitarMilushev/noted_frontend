@@ -18,6 +18,7 @@ class Session extends _$Session {
     SessionData? session;
     try {
       session = SessionData.fromJson(jsonDecode(recovered));
+      // ignore: unused_catch_stack
     } catch (e, st) {
       // TODO - logging
       await _storage.delete(key: _sessionPath);
